@@ -101,11 +101,8 @@ struct Keychain {
     
     struct SecItemWrapper {
         static func matching(query: [String: AnyObject]) throws -> AnyObject? {
-            var rawResult: Unmanaged<AnyObject>?
-            let rawStatus = SecItemCopyMatching(query, &rawResult)
-            // Immediately take the retained value, so it won't leak
-            // in case it needs to throw.
-            let result: AnyObject? = rawResult?.takeRetainedValue()
+            var result: AnyObject?
+            let rawStatus = SecItemCopyMatching(query, &result)
             
             if let error = KeychainError.errorFromOSStatus(rawStatus) {
                 throw error
@@ -114,11 +111,8 @@ struct Keychain {
         }
         
         static func add(attributes: [String: AnyObject]) throws -> AnyObject? {
-            var rawResult: Unmanaged<AnyObject>?
-            let rawStatus = SecItemAdd(attributes, &rawResult)
-            // Immediately take the retained value, so it won't leak
-            // in case it needs to throw.
-            let result: AnyObject? = rawResult?.takeRetainedValue()
+            var result: AnyObject?
+            let rawStatus = SecItemAdd(attributes, &result)
             
             if let error = KeychainError.errorFromOSStatus(rawStatus) {
                 throw error
